@@ -1,0 +1,92 @@
+# --- 编译产物 (Build Artifacts) ---
+Debug/
+Release/
+bin/
+obj/
+*.list
+*.map
+*.elf
+*.bin
+*.hex
+*.srec
+
+# --- STM32CubeIDE / Eclipse ---
+.settings/
+.shbuild/
+.p6project
+*.launch
+# 如果你希望其他人能直接打开项目，通常保留 .project 和 .cproject
+# 但本地编译生成的依赖文件需要忽略
+*.d
+*.o
+*.su
+*.cyclo
+
+# --- Keil MDK (uVision) ---
+*.uvguix.*
+*.uvgui.*
+*.uvoptx
+*.uv2.bak
+*.uvopt.bak
+/Listings/
+/Objects/
+*.dep
+*.build_log.htm
+*.htm
+*.lnp
+*.axf
+*.sct
+
+# --- IAR Embedded Workbench ---
+*.dep
+*.ewt
+*.ewp.bak
+*.ucf
+Debug/
+Release/
+Settings/
+
+# --- 操作系统与编辑器 (OS & Editors) ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*~
+
+# --- 外部库与工具 ---
+# 如果你使用 STM32CubeMX 频繁生成代码，有时会产生备份文件
+*.bak
+
+# --- Security / Keys ---
+*_keygen
+*.pub
+*.key
+*.pem
+
+# --- STM32CubeIDE / Eclipse 补充 ---
+
+# Eclipse 工作区元数据目录（防止误将整个 Workspace 加入版本控制）
+.metadata/
+
+# Eclipse CDT C/C++ 代码索引缓存目录
+.index/
+
+# STM32 MCU Finder 本地缓存
+.stmcufinder/
+
+# IDE 或底层工具链生成的日志文件
+*.log
+
+# CubeMX 独立运行或在 IDE 内部更新时产生的工程备份
+*.ioc.bak
+
+# 调试器日志文件 (ST-LINK / J-Link)
+JLinkLog.txt
+*.jlink
+
+# 如果在 IDE 中使用了静态代码分析 (如 cppcheck)，屏蔽其缓存
+.cppcheck/
+
+# Claude session and cache
+.claude/
