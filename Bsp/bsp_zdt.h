@@ -50,21 +50,22 @@ extern "C" {
 
 /* Types */
 
-typedef void (*ZDT_RxCallback)(uint8_t addr, uint8_t func,
-                               uint8_t *data, uint8_t len);
-
 typedef struct {
     uint8_t  addr;
     uint8_t  status_flags;
-    int32_t  position;
+    int32_t  position;         /* 当前累积脉冲 (CAN 回调更新) */
+    int32_t  prev_position;    /* 上一采样点脉冲 (ChassisControl 更新) */
+    int16_t  velocity_rpm;     /* 当前转速 RPM (ChassisControl 更新) */
     uint32_t last_rx_tick;
 } ZDT_MotorStatus_t;
 
 /* API */
 
 void ZDT_Init(FDCAN_HandleTypeDef *hfdcan);
-void ZDT_SetRxCallback(ZDT_RxCallback callback);
 ZDT_MotorStatus_t* ZDT_GetStatus(uint8_t addr);
+
+/** CAN 中断收到 ZDT 帧时调用, 自动解析 position / status */
+void ZDT_OnRxMessage(uint32_t ext_id, const uint8_t *data, uint8_t dlc);
 
 HAL_StatusTypeDef ZDT_Enable(uint8_t addr);
 HAL_StatusTypeDef ZDT_Disable(uint8_t addr);
