@@ -21,6 +21,8 @@
 extern "C" {
 #endif
 
+extern uint8_t       dma_rx_buf[256];
+
 void Comm_Init(void);
 void Comm_InitTask(void);
 void Comm_OnUartIdle(uint16_t received_size);

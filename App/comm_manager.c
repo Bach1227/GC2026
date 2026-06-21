@@ -27,7 +27,7 @@
 /*  静态变量                                                              */
 /* ====================================================================== */
 
-static uint8_t       dma_rx_buf[DMA_RX_BUF_SIZE];
+uint8_t       dma_rx_buf[256];
 static RingBuffer_t  uart_rb;
 static TaskHandle_t  comm_task_handle = NULL;
 
@@ -44,6 +44,9 @@ extern UART_HandleTypeDef huart1;
 void Comm_Init(void)
 {
     RingBuffer_Init(&uart_rb, dma_rx_buf, DMA_RX_BUF_SIZE);
+    HAL_UART_Receive_DMA(&huart1, dma_rx_buf, DMA_RX_BUF_SIZE);
+    __HAL_UART_CLEAR_FLAG(&huart1, UART_CLEAR_IDLEF);
+    SET_BIT(huart1.Instance->CR1, USART_CR1_IDLEIE);
 }
 
 void Comm_InitTask(void)

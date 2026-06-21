@@ -283,73 +283,73 @@ uint16_t PackPosition(const Position_t *pos, uint8_t *out, uint16_t out_size)
 /*  PAYLOAD 拆包 (字节流 → 结构体)                                        */
 /* ====================================================================== */
 
-bool UnpackCarMove(const uint8_t *data, uint16_t len, CarMove_t *cmd)
+uint8_t UnpackCarMove(const uint8_t *data, uint16_t len, CarMove_t *cmd)
 {
-    if (data == NULL || cmd == NULL || len < 4) return false;
+    if (data == NULL || cmd == NULL || len < 4) return 0u;
 
     cmd->direction = (int16_t)(data[0] | ((uint16_t)data[1] << 8));
     cmd->distance  = (int16_t)(data[2] | ((uint16_t)data[3] << 8));
 
-    return true;
+    return 1u;
 }
 
-bool UnpackGrasp(const uint8_t *data, uint16_t len, Grasp_t *cmd)
+uint8_t UnpackGrasp(const uint8_t *data, uint16_t len, Grasp_t *cmd)
 {
-    if (data == NULL || cmd == NULL || len < 7) return false;
+    if (data == NULL || cmd == NULL || len < 7) return 0u;
 
     cmd->x_error  = (int16_t)(data[0] | ((uint16_t)data[1] << 8));
     cmd->y_error  = (int16_t)(data[2] | ((uint16_t)data[3] << 8));
     cmd->grasp     = data[4];
     cmd->tray_num  = (int16_t)(data[5] | ((uint16_t)data[6] << 8));
 
-    return true;
+    return 1u;
 }
 
-bool UnpackEmergency(const uint8_t *data, uint16_t len, Emergency_t *cmd)
+uint8_t UnpackEmergency(const uint8_t *data, uint16_t len, Emergency_t *cmd)
 {
-    if (data == NULL || cmd == NULL || len < 1) return false;
+    if (data == NULL || cmd == NULL || len < 1) return 0u;
 
     cmd->correct = data[0];
 
-    return true;
+    return 1u;
 }
 
-bool UnpackAckAck(const uint8_t *data, uint16_t len, AckAck_t *ack)
+uint8_t UnpackAckAck(const uint8_t *data, uint16_t len, AckAck_t *ack)
 {
-    if (data == NULL || ack == NULL || len < 3) return false;
+    if (data == NULL || ack == NULL || len < 3) return 0u;
 
     ack->received = data[0];
     ack->sequence  = (int16_t)(data[1] | ((uint16_t)data[2] << 8));
 
-    return true;
+    return 1u;
 }
 
-bool UnpackAckEvent(const uint8_t *data, uint16_t len, AckEvent_t *evt)
+uint8_t UnpackAckEvent(const uint8_t *data, uint16_t len, AckEvent_t *evt)
 {
-    if (data == NULL || evt == NULL || len < 1) return false;
+    if (data == NULL || evt == NULL || len < 1) return 0u;
 
     evt->finished = data[0];
 
-    return true;
+    return 1u;
 }
 
-bool UnpackPosition(const uint8_t *data, uint16_t len, Position_t *pos)
+uint8_t UnpackPosition(const uint8_t *data, uint16_t len, Position_t *pos)
 {
-    if (data == NULL || pos == NULL || len < 4) return false;
+    if (data == NULL || pos == NULL || len < 4) return 0u;
 
     pos->x = (int16_t)(data[0] | ((uint16_t)data[1] << 8));
     pos->y = (int16_t)(data[2] | ((uint16_t)data[3] << 8));
 
-    return true;
+    return 1u;
 }
 
 /* ====================================================================== */
 /*  自动拆包 (根据 TYPE/CMD 判断)                                         */
 /* ====================================================================== */
 
-bool Protocol_UnpackPayload(ProtocolFrame_t *frame)
+uint8_t Protocol_UnpackPayload(ProtocolFrame_t *frame)
 {
-    if (frame == NULL) return false;
+    if (frame == NULL) return 0u;
 
     const uint8_t *data = frame->payload_ptr ? frame->payload_ptr : frame->payload.raw;
     uint16_t len = frame->len;
@@ -366,7 +366,7 @@ bool Protocol_UnpackPayload(ProtocolFrame_t *frame)
         case CMD_EMERGENCY:
             return UnpackEmergency(data, len, &frame->payload.emergency);
         default:
-            return false; /* 未知 CMD */
+            return 0u; /* 未知 CMD */
         }
 
     case MSG_TYPE_ACK:
@@ -377,7 +377,7 @@ bool Protocol_UnpackPayload(ProtocolFrame_t *frame)
         case ACK_ACK_EVENT:
             return UnpackAckEvent(data, len, &frame->payload.ack_event);
         default:
-            return false;
+            return 0u;
         }
 
     case MSG_TYPE_STATUS:
@@ -387,17 +387,17 @@ bool Protocol_UnpackPayload(ProtocolFrame_t *frame)
         {
             return UnpackPosition(data, len, &frame->payload.position);
         }
-        return false;
+        return 0u;
 
     case MSG_TYPE_HEARTBEAT:
         /* 心跳无 PAYLOAD, 直接成功 */
-        return true;
+        return 1u;
 
     case MSG_TYPE_ERROR:
         /* 错误帧 PAYLOAD[0] 即错误码, 已存在 raw 中 */
-        return true;
+        return 1u;
 
     default:
-        return false;
+        return 0u;
     }
 }

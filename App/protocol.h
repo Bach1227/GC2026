@@ -20,7 +20,6 @@
 #define __PROTOCOL_H__
 
 #include <stdint.h>
-#include <stdbool.h>
 
 #include "stm32h7xx_hal.h"
 #include "DataStructure.h"
@@ -215,43 +214,43 @@ uint16_t Protocol_BuildError(uint8_t seq, uint8_t error_code,
 uint16_t PackCarMove(const CarMove_t *cmd, uint8_t *out, uint16_t out_size);
 
 /** CarMove 拆包 ← 字节数组, 返回成功/失败 */
-bool UnpackCarMove(const uint8_t *data, uint16_t len, CarMove_t *cmd);
+uint8_t UnpackCarMove(const uint8_t *data, uint16_t len, CarMove_t *cmd);
 
 /** Grasp 封包 */
 uint16_t PackGrasp(const Grasp_t *cmd, uint8_t *out, uint16_t out_size);
 
 /** Grasp 拆包 */
-bool UnpackGrasp(const uint8_t *data, uint16_t len, Grasp_t *cmd);
+uint8_t UnpackGrasp(const uint8_t *data, uint16_t len, Grasp_t *cmd);
 
 /** Emergency 封包 */
 uint16_t PackEmergency(const Emergency_t *cmd, uint8_t *out, uint16_t out_size);
 
 /** Emergency 拆包 */
-bool UnpackEmergency(const uint8_t *data, uint16_t len, Emergency_t *cmd);
+uint8_t UnpackEmergency(const uint8_t *data, uint16_t len, Emergency_t *cmd);
 
 /** AckAck 封包 */
 uint16_t PackAckAck(const AckAck_t *ack, uint8_t *out, uint16_t out_size);
 
 /** AckAck 拆包 */
-bool UnpackAckAck(const uint8_t *data, uint16_t len, AckAck_t *ack);
+uint8_t UnpackAckAck(const uint8_t *data, uint16_t len, AckAck_t *ack);
 
 /** AckEvent 封包 */
 uint16_t PackAckEvent(const AckEvent_t *evt, uint8_t *out, uint16_t out_size);
 
 /** AckEvent 拆包 */
-bool UnpackAckEvent(const uint8_t *data, uint16_t len, AckEvent_t *evt);
+uint8_t UnpackAckEvent(const uint8_t *data, uint16_t len, AckEvent_t *evt);
 
 /** Position 封包 */
 uint16_t PackPosition(const Position_t *pos, uint8_t *out, uint16_t out_size);
 
 /** Position 拆包 */
-bool UnpackPosition(const uint8_t *data, uint16_t len, Position_t *pos);
+uint8_t UnpackPosition(const uint8_t *data, uint16_t len, Position_t *pos);
 
 /**
  * 根据 type/cmd 自动解包 payload_ptr 到 frame->payload 的对应结构体
  * @return true 解包成功, false 格式不对
  */
-bool Protocol_UnpackPayload(ProtocolFrame_t *frame);
+uint8_t Protocol_UnpackPayload(ProtocolFrame_t *frame);
 
 #ifdef __cplusplus
 }
